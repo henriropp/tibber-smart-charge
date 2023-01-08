@@ -1,7 +1,7 @@
 {
   "domain": "tibber_smart_charge",
   "name": "Tibber smart charge",
-  "documentation": "https://www.example.com",
+  "documentation": "https://github.com/henriropp/tibber-smart-charge/blob/main/README.md",
   "dependencies": [],
   "codeowners": ["@henriropp"],
   "requirements": ["pyTibber==0.26.6"],
