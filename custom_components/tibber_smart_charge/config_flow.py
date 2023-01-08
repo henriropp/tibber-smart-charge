@@ -109,7 +109,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         sensors_map = {e.entity_id: e for e in entries}
 
         if user_input is not None:
-            updated_sensors = deepcopy(self.config_entry.options[CONF_SENSORS])
+            updated_sensors = deepcopy(self.config_entry.options[CONF_SENSORS]) if CONF_SENSORS in self.config_entry.options else []
 
             removed_sensors = [
                 entity_id for entity_id in sensors_map.keys() if entity_id not in user_input[CONF_SENSORS]
