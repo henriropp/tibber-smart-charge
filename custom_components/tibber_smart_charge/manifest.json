@@ -2,9 +2,11 @@
   "domain": "tibber_smart_charge",
   "name": "Tibber smart charge",
   "documentation": "https://github.com/henriropp/tibber-smart-charge/blob/main/README.md",
+  "issue_tracker": "https://github.com/henriropp/tibber-smart-charge/issues",
   "dependencies": [],
   "codeowners": ["@henriropp"],
   "requirements": ["pyTibber==0.26.6"],
   "iot_class": "cloud_polling",
-  "config_flow": true
+  "config_flow": true,
+  "version": "1.0.0"
 }
