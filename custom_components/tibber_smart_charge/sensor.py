@@ -163,6 +163,7 @@ class SmartChargeSensor(BinarySensorEntity):
         for idx in range(int(data[CONF_COUNT])):
             if idx > 0:
                 self.attrs[f'other_hour_{idx}'] = None
+                self.attrs[f'other_hour_{idx}_price'] = None
 
         self._name = data[CONF_NAME]
         self._available = True
@@ -218,7 +219,8 @@ class SmartChargeSensor(BinarySensorEntity):
                 self.attrs["next_hour"] = dt
                 self.attrs["next_hour_price"] = price
             else:
-                self.attrs[f'other_hour_{idx}'] = f'{dt} = {price}'
+                self.attrs[f'other_hour_{idx}'] = dt
+                self.attrs[f'other_hour_{idx}_price'] = price
             idx += 1
 
         if self.attrs["next_hour"]:
