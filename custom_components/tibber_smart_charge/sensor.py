@@ -8,6 +8,7 @@ from random import randrange
 from typing import Any
 
 import aiohttp
+from homeassistant.components.binary_sensor import BinarySensorEntity, BinarySensorDeviceClass
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
@@ -19,7 +20,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import Throttle, dt as dt_util
 from .const import DOMAIN as TIBBER_DOMAIN, MANUFACTURER
 from .price_logic import PriceLogic
-from ..binary_sensor import BinarySensorEntity, BinarySensorDeviceClass
 
 _LOGGER = logging.getLogger(__name__)
 
