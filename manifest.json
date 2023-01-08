@@ -1,0 +1,10 @@
+{
+  "domain": "tibber_smart_charge",
+  "name": "Tibber smart charge",
+  "documentation": "https://www.example.com",
+  "dependencies": [],
+  "codeowners": ["@henriropp"],
+  "requirements": ["pyTibber==0.26.6"],
+  "iot_class": "cloud_polling",
+  "config_flow": true
+}
