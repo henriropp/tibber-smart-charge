@@ -1,4 +1,5 @@
 {
   "name": "Tibber Smart Charge",
-  "country": ["SE"]
+  "country": ["SE"],
+  "homeassistant": " 2022.12.0"
 }
