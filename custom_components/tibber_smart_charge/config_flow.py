@@ -1,5 +1,4 @@
 """Adds config flow for Tibber integration."""
-import asyncio
 from copy import deepcopy
 import logging
 from typing import Any
@@ -56,7 +55,7 @@ class TibberSmartChargeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             try:
                 await tibber_connection.update_info()
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 errors[CONF_ACCESS_TOKEN] = "timeout"
             except aiohttp.ClientError:
                 errors[CONF_ACCESS_TOKEN] = "cannot_connect"

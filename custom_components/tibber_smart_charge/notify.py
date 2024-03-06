@@ -1,5 +1,4 @@
 """Support for Tibber notifications."""
-import asyncio
 import logging
 
 from homeassistant.components.notify import (
@@ -15,7 +14,7 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_get_service(hass, config, discovery_info=None):
     """Get the Tibber notification service."""
-    tibber_connection = hass.data[TIBBER_DOMAIN]['tibber_connection']
+    tibber_connection = hass.data[TIBBER_DOMAIN]["tibber_connection"]
     return TibberNotificationService(tibber_connection.send_notification)
 
 
@@ -31,5 +30,5 @@ class TibberNotificationService(BaseNotificationService):
         title = kwargs.get(ATTR_TITLE, ATTR_TITLE_DEFAULT)
         try:
             await self._notify(title=title, message=message)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             _LOGGER.error("Timeout sending message with Tibber")
