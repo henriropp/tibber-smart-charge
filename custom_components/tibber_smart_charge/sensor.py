@@ -2,17 +2,17 @@
 from __future__ import annotations
 
 import asyncio
-import logging
 from datetime import timedelta
+import logging
 from random import randrange
 from typing import Any
 
 import aiohttp
-from homeassistant.components.binary_sensor import (
-    BinarySensorEntity,
-    BinarySensorDeviceClass,
-)
 
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+)
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_COUNT, CONF_NAME, CONF_SENSORS, UnitOfTime
@@ -21,6 +21,7 @@ from homeassistant.exceptions import PlatformNotReady
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import Throttle, dt as dt_util
+
 from .const import DOMAIN as TIBBER_DOMAIN, MANUFACTURER
 from .price_logic import PriceLogic
 

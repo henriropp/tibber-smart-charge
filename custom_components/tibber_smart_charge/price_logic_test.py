@@ -2,6 +2,7 @@
 import unittest
 
 import price_logic
+
 from homeassistant.util import dt as dt_util
 
 prices = {
@@ -83,14 +84,20 @@ class MyTestCase(unittest.TestCase):
         """Test of price logic."""
         pl = price_logic.PriceLogic(prices)
 
-        cheapest = pl.find_cheapest_hours(1, dt_util.parse_datetime("2023-01-02T04:00:00.000+01:00"))
+        cheapest = pl.find_cheapest_hours(
+            1, dt_util.parse_datetime("2023-01-02T04:00:00.000+01:00")
+        )
         self.assertTimeAndPrice(cheapest[0], 0.7232, "2023-01-03T03:00:00.000+01:00")
 
-        cheapest = pl.find_cheapest_hours(2, dt_util.parse_datetime("2023-01-02T04:00:00.000+01:00"))
+        cheapest = pl.find_cheapest_hours(
+            2, dt_util.parse_datetime("2023-01-02T04:00:00.000+01:00")
+        )
         self.assertTimeAndPrice(cheapest[0], 0.8054, "2023-01-02T04:00:00.000+01:00")
         self.assertTimeAndPrice(cheapest[1], 0.7232, "2023-01-03T03:00:00.000+01:00")
 
-        cheapest = pl.find_cheapest_hours(3, dt_util.parse_datetime("2023-01-02T04:00:00.000+01:00"))
+        cheapest = pl.find_cheapest_hours(
+            3, dt_util.parse_datetime("2023-01-02T04:00:00.000+01:00")
+        )
         self.assertTimeAndPrice(cheapest[0], 0.8054, "2023-01-02T04:00:00.000+01:00")
         self.assertTimeAndPrice(cheapest[1], 0.7232, "2023-01-03T03:00:00.000+01:00")
         self.assertTimeAndPrice(cheapest[2], 0.8054, "2023-01-03T04:00:00.000+01:00")
@@ -99,10 +106,14 @@ class MyTestCase(unittest.TestCase):
         """Test of price logic."""
         pl = price_logic.PriceLogic(prices)
 
-        cheapest = pl.find_cheapest_hours(1, dt_util.parse_datetime("2023-01-02T00:00:00.000+01:00"), 7)
+        cheapest = pl.find_cheapest_hours(
+            1, dt_util.parse_datetime("2023-01-02T00:00:00.000+01:00"), 7
+        )
         self.assertTimeAndPrice(cheapest[0], 0.7232, "2023-01-02T03:00:00.000+01:00")
 
-        cheapest = pl.find_cheapest_hours(1, dt_util.parse_datetime("2023-01-02T05:00:00.000+01:00"), 7)
+        cheapest = pl.find_cheapest_hours(
+            1, dt_util.parse_datetime("2023-01-02T05:00:00.000+01:00"), 7
+        )
         self.assertTimeAndPrice(cheapest[0], 1.0925, "2023-01-02T05:00:00.000+01:00")
 
 
