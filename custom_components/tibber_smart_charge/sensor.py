@@ -26,7 +26,7 @@ from .price_logic import PriceLogic
 
 _LOGGER = logging.getLogger(__name__)
 
-TIME_HOURS = UnitOfTime.HOURS
+TIME_HOURS = str(UnitOfTime.HOURS)
 ICON_CURRENCY = "mdi:currency-usd"
 ICON_CHARGING = "mdi:battery-charging-outline"
 SCAN_INTERVAL = timedelta(minutes=1)

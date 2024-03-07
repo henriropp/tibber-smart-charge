@@ -26,7 +26,7 @@ from homeassistant.helpers.entity_registry import (
 
 from .const import DOMAIN
 
-TIME_HOURS = UnitOfTime.HOURS
+TIME_HOURS = str(UnitOfTime.HOURS)
 
 DATA_SCHEMA = vol.Schema({vol.Required(CONF_ACCESS_TOKEN): str})
 
