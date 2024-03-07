@@ -95,6 +95,8 @@ class TibberSmartChargeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class OptionsFlowHandler(config_entries.OptionsFlow):
+    """Create an options flow."""
+
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         """Initialize options flow."""
         self.config_entry = config_entry
@@ -121,7 +123,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
 
             removed_sensors = [
                 entity_id
-                for entity_id in sensors_map.keys()
+                for entity_id in sensors_map
                 if entity_id not in user_input[CONF_SENSORS]
             ]
             for entity_id in removed_sensors:

@@ -155,7 +155,7 @@ class TibberSensorElPrice(TibberSensor):
 
 
 class SmartChargeSensor(BinarySensorEntity):
-    """Representation of a smart charge entity"""
+    """Representation of a smart charge entity."""
 
     def __init__(self, tibber_home, data: dict[str, str]):
         super().__init__()
@@ -210,13 +210,17 @@ class SmartChargeSensor(BinarySensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the extra state attributes."""
         return self.attrs
 
     @property
     def hours(self) -> int:
+        """Return number of charging hours."""
         return self.attrs[CONF_COUNT]
 
     async def async_update(self) -> None:
+        """Update Electricity Prices, set cheapest hours, set sensor is_on attribute."""
+
         price_logic = PriceLogic(self._tibber_home.price_total)
         time_from = dt_util.now().replace(minute=0, second=0, microsecond=0)
         cheap_hours = price_logic.find_cheapest_hours(

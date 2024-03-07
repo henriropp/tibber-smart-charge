@@ -77,6 +77,8 @@ class MyTestCase(unittest.TestCase):
         self.assertTimeAndPrice(cheapest[2], 0.7232, "2023-01-03T03:00:00.000+01:00")
 
     def assertTimeAndPrice(self, priceTuple, price, timestamp):
+        """Check if found priceTuple is equal to provided timestamp and price."""
+
         self.assertEqual(dt_util.parse_datetime(timestamp), priceTuple[0])
         self.assertEqual(price, priceTuple[1])
 

@@ -1,8 +1,4 @@
-"""
-Smart charge logic with tibber electricity prices.
-
-yes
-"""
+"""Smart charge logic with tibber electricity prices."""
 
 import logging
 
