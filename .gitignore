@@ -130,3 +130,19 @@ dmypy.json
 
 # IDEA
 .idea
+
+# Development Environment
+.HA_VERSION
+.cloud
+.storage
+automations.yaml
+blueprints
+configuration.yaml
+/custom_components/
+!custom_components/tibber_smart_charge
+deps
+home-assistant*
+scenes.yaml
+scripts.yaml
+secrets.yaml
+tts

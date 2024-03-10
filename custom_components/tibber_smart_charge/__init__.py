@@ -1,10 +1,5 @@
-"""
-Smart charge logic with tibber electricity prices.
+"""Smart charge logic with tibber electricity prices."""
 
-yes
-"""
-
-import asyncio
 import logging
 
 import aiohttp
@@ -48,7 +43,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         time_zone=dt_util.DEFAULT_TIME_ZONE,
     )
     hass.data[DOMAIN] = {}
-    hass.data[DOMAIN]['tibber_connection'] = tibber_connection
+    hass.data[DOMAIN]["tibber_connection"] = tibber_connection
     # Registers update listener to update config entry when options are updated.
     unsub_options_update_listener = entry.add_update_listener(options_update_listener)
     # Store a reference to the unsubscribe function to cleanup if an entry is unloaded.
@@ -61,7 +56,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     try:
         await tibber_connection.update_info()
-    except asyncio.TimeoutError as err:
+    except TimeoutError as err:
         raise ConfigEntryNotReady from err
     except aiohttp.ClientError as err:
         _LOGGER.error("Error connecting to Tibber: %s ", err)
@@ -93,13 +88,11 @@ async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     )
     hass.data[DOMAIN]["unsub_options_update_listener"]()
     if unload_ok:
-        tibber_connection = hass.data[DOMAIN]['tibber_connection']
+        tibber_connection = hass.data[DOMAIN]["tibber_connection"]
         await tibber_connection.rt_disconnect()
     return unload_ok
 
 
-async def options_update_listener(
-        hass: HomeAssistant, config_entry: ConfigEntry
-):
+async def options_update_listener(hass: HomeAssistant, config_entry: ConfigEntry):
     """Handle options update."""
     await hass.config_entries.async_reload(config_entry.entry_id)

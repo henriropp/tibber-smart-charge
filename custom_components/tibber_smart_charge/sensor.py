@@ -1,28 +1,32 @@
 """Support for Tibber sensors."""
 from __future__ import annotations
 
-import asyncio
-import logging
 from datetime import timedelta
+import logging
 from random import randrange
 from typing import Any
 
 import aiohttp
-from homeassistant.components.binary_sensor import BinarySensorEntity, BinarySensorDeviceClass
 
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntity,
+)
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_COUNT, CONF_NAME, CONF_SENSORS, TIME_HOURS
+from homeassistant.const import CONF_COUNT, CONF_NAME, CONF_SENSORS, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import PlatformNotReady
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import Throttle, dt as dt_util
+
 from .const import DOMAIN as TIBBER_DOMAIN, MANUFACTURER
 from .price_logic import PriceLogic
 
 _LOGGER = logging.getLogger(__name__)
 
+TIME_HOURS = str(UnitOfTime.HOURS)
 ICON_CURRENCY = "mdi:currency-usd"
 ICON_CHARGING = "mdi:battery-charging-outline"
 SCAN_INTERVAL = timedelta(minutes=1)
@@ -31,17 +35,17 @@ PARALLEL_UPDATES = 0
 
 
 async def async_setup_entry(
-        hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Set up the Tibber sensor."""
 
-    tibber_connection = hass.data[TIBBER_DOMAIN]['tibber_connection']
+    tibber_connection = hass.data[TIBBER_DOMAIN]["tibber_connection"]
 
     entities: list[TibberSensor] = []
     for home in tibber_connection.get_homes(only_active=False):
         try:
             await home.update_info()
-        except asyncio.TimeoutError as err:
+        except TimeoutError as err:
             _LOGGER.error("Timeout connecting to Tibber home: %s ", err)
             raise PlatformNotReady() from err
         except aiohttp.ClientError as err:
@@ -51,7 +55,10 @@ async def async_setup_entry(
         if home.has_active_subscription:
             entities.append(TibberSensorElPrice(home))
             if CONF_SENSORS in entry.options:
-                smart_charge_sensors = [SmartChargeSensor(home, data) for data in entry.options[CONF_SENSORS]]
+                smart_charge_sensors = [
+                    SmartChargeSensor(home, data)
+                    for data in entry.options[CONF_SENSORS]
+                ]
                 for sensor in smart_charge_sensors:
                     entities.append(sensor)
 
@@ -111,19 +118,19 @@ class TibberSensorElPrice(TibberSensor):
         """Get the latest data and updates the states."""
         now = dt_util.now()
         if (
-                not self._tibber_home.last_data_timestamp
-                or (self._tibber_home.last_data_timestamp - now).total_seconds()
-                < 5 * 3600 + self._spread_load_constant
-                or not self.available
+            not self._tibber_home.last_data_timestamp
+            or (self._tibber_home.last_data_timestamp - now).total_seconds()
+            < 5 * 3600 + self._spread_load_constant
+            or not self.available
         ):
             _LOGGER.debug("Asking for new data")
             await self._fetch_data()
 
         elif (
-                self._tibber_home.current_price_total
-                and self._last_updated
-                and self._last_updated.hour == now.hour
-                and self._tibber_home.last_data_timestamp
+            self._tibber_home.current_price_total
+            and self._last_updated
+            and self._last_updated.hour == now.hour
+            and self._tibber_home.last_data_timestamp
         ):
             return
 
@@ -138,7 +145,7 @@ class TibberSensorElPrice(TibberSensor):
         _LOGGER.debug("Fetching data")
         try:
             await self._tibber_home.update_info_and_price_info()
-        except (asyncio.TimeoutError, aiohttp.ClientError):
+        except (TimeoutError, aiohttp.ClientError):
             return
         data = self._tibber_home.info["viewer"]["home"]
         self._attr_extra_state_attributes["app_nickname"] = data["appNickname"]
@@ -148,22 +155,22 @@ class TibberSensorElPrice(TibberSensor):
 
 
 class SmartChargeSensor(BinarySensorEntity):
-    """Representation of a smart charge entity"""
+    """Representation of a smart charge entity."""
 
     def __init__(self, tibber_home, data: dict[str, str]):
         super().__init__()
         self._tibber_home = tibber_home
         self.attrs: dict[str, Any] = {
             CONF_COUNT: data[CONF_COUNT],
-            'next_hour': None,
-            'next_hour_price': None,
-            'done_before_hour': data[TIME_HOURS] if data[TIME_HOURS] else None,
+            "next_hour": None,
+            "next_hour_price": None,
+            "done_before_hour": data[TIME_HOURS] if data[TIME_HOURS] else None,
         }
 
         for idx in range(int(data[CONF_COUNT])):
             if idx > 0:
-                self.attrs[f'other_hour_{idx}'] = None
-                self.attrs[f'other_hour_{idx}_price'] = None
+                self.attrs[f"other_hour_{idx}"] = None
+                self.attrs[f"other_hour_{idx}_price"] = None
 
         self._name = data[CONF_NAME]
         self._available = True
@@ -203,27 +210,33 @@ class SmartChargeSensor(BinarySensorEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the extra state attributes."""
         return self.attrs
 
     @property
     def hours(self) -> int:
+        """Return number of charging hours."""
         return self.attrs[CONF_COUNT]
 
     async def async_update(self) -> None:
+        """Update Electricity Prices, set cheapest hours, set sensor is_on attribute."""
+
         price_logic = PriceLogic(self._tibber_home.price_total)
         time_from = dt_util.now().replace(minute=0, second=0, microsecond=0)
-        cheap_hours = price_logic.find_cheapest_hours(self.hours, time_from, self.attrs["done_before_hour"])
+        cheap_hours = price_logic.find_cheapest_hours(
+            self.hours, time_from, self.attrs["done_before_hour"]
+        )
         idx = 0
         for dt, price in cheap_hours:
             if idx == 0:
                 self.attrs["next_hour"] = dt
                 self.attrs["next_hour_price"] = price
             else:
-                self.attrs[f'other_hour_{idx}'] = dt
-                self.attrs[f'other_hour_{idx}_price'] = price
+                self.attrs[f"other_hour_{idx}"] = dt
+                self.attrs[f"other_hour_{idx}_price"] = price
             idx += 1
 
         if self.attrs["next_hour"]:
-            self._attr_is_on = (self.attrs["next_hour"].hour == time_from.hour)
+            self._attr_is_on = self.attrs["next_hour"].hour == time_from.hour
         else:
             self._attr_is_on = False
