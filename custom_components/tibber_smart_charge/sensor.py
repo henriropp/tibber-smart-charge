@@ -135,7 +135,7 @@ class TibberSensorElPrice(TibberSensor):
             return
 
         res = self._tibber_home.current_price_data()
-        self._attr_native_value, price_level, self._last_updated = res
+        self._attr_native_value, price_level, self._last_updated, *_ = res
 
         self._attr_available = self._attr_native_value is not None
         self._attr_native_unit_of_measurement = self._tibber_home.price_unit
