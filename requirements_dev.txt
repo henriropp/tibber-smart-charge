@@ -1,2 +1,2 @@
 homeassistant
-pyTibber==0.26.6
+pyTibber==0.30.4
