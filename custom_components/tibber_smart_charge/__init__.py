@@ -37,9 +37,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up a config entry."""
 
+    websession = async_get_clientsession(hass)
     tibber_connection = tibber.Tibber(
         access_token=entry.data[CONF_ACCESS_TOKEN],
-        websession=async_get_clientsession(hass),
+        websession=websession,
         time_zone=dt_util.DEFAULT_TIME_ZONE,
     )
     hass.data[DOMAIN] = {}
