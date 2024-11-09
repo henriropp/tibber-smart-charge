@@ -5,7 +5,7 @@
   "issue_tracker": "https://github.com/henriropp/tibber-smart-charge/issues",
   "dependencies": [],
   "codeowners": ["@henriropp"],
-  "requirements": ["pyTibber==0.26.6"],
+  "requirements": ["pyTibber==0.30.7"],
   "iot_class": "cloud_polling",
   "config_flow": true,
   "version": "1.0.0"
